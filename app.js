@@ -23,7 +23,7 @@ const reclaimedIcon = L.icon({
 // Function to create popup content
 function createPopupContent(properties) {
     let content = '<div class="popup-content">';
-    content += '<h3>' + properties.name + '</h3>';
+    content += '<h3>' + (properties.name || 'Unnamed Site') + '</h3>';
     
     if (properties.area) {
         content += '<div class="info-row">';
@@ -46,6 +46,13 @@ function createPopupContent(properties) {
         content += '</div>';
     }
     
+    if (properties['year completed']) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Year Completed:</span>';
+        content += '<span class="value">' + properties['year completed'] + '</span>';
+        content += '</div>';
+    }
+    
     if (properties.developer) {
         content += '<div class="info-row">';
         content += '<span class="label">Developer:</span>';
@@ -57,6 +64,13 @@ function createPopupContent(properties) {
         content += '<div class="info-row">';
         content += '<span class="label">Location:</span>';
         content += '<span class="value">' + properties.address + '</span>';
+        content += '</div>';
+    }
+    
+    if (properties.notes) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Notes:</span>';
+        content += '<span class="value">' + properties.notes + '</span>';
         content += '</div>';
     }
     
@@ -75,4 +89,5 @@ fetch('data.json')
             marker.bindPopup(createPopupContent(site));
         });
     })
+
     .catch(error => console.error('Error loading data:', error));
