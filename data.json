@@ -13,8 +13,8 @@
     },
     {
       "name": "Manila Bay Reclamation",
-      "lat": 14.5995,
-      "lon": 120.9842,
+      "lat": 14.598081,
+      "lon": 120.950931,
       "area": 318,
       "status": "completed",
       "year started": 2015,
@@ -24,3 +24,4 @@
     }
   ]
 }
+
