@@ -10,6 +10,17 @@
       "year completed": 2015,
       "developer": "PRA",
       "address": "Samal"
+    },
+    {
+      "name": "Manila Bay Reclamation",
+      "lat": 14.5995,
+      "lon": 120.9842,
+      "area": 318,
+      "status": "completed",
+      "year started": 2015,
+      "year completed": 2020,
+      "developer": "Private Corp",
+      "address": "Manila"
     }
   ]
 }
