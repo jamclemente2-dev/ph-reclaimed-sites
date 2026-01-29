@@ -1,0 +1,15 @@
+{
+  "sites": [
+    {
+      "name": "Samal Reclamation",
+      "lat": 7.0712,
+      "lon": 125.7092,
+      "area": 500,
+      "status": "ongoing",
+      "year started": 2010,
+      "year completed": 2015,
+      "developer": "PRA",
+      "address": "Samal"
+    }
+  ]
+}
