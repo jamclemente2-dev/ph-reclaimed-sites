@@ -20,6 +20,56 @@ const reclaimedIcon = L.icon({
     popupAnchor: [0, -32]
 });
 
+// Function to generate KMZ file for a site
+function generateKMZ(site) {
+    // Create KML content
+    const kml = `<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>${site.name}</name>
+    <description>${site.name} - Reclamation Project</description>
+    <Style id="reclamationStyle">
+      <IconStyle>
+        <color>ffff0000</color>
+        <scale>1.2</scale>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
+    <Placemark>
+      <name>${site.name}</name>
+      <description><![CDATA[
+        <h3>${site.name}</h3>
+        <table>
+          <tr><td><b>Area:</b></td><td>${site.area || 'N/A'} hectares</td></tr>
+          <tr><td><b>Status:</b></td><td>${site.status || 'N/A'}</td></tr>
+          <tr><td><b>Year Started:</b></td><td>${site['year started'] || 'N/A'}</td></tr>
+          <tr><td><b>Year Completed:</b></td><td>${site['year completed'] || 'N/A'}</td></tr>
+          <tr><td><b>Developer:</b></td><td>${site.developer || 'N/A'}</td></tr>
+          <tr><td><b>Location:</b></td><td>${site.address || 'N/A'}</td></tr>
+          <tr><td><b>Notes:</b></td><td>${site.notes || 'N/A'}</td></tr>
+        </table>
+      ]]></description>
+      <styleUrl>#reclamationStyle</styleUrl>
+      <Point>
+        <coordinates>${site.lon},${site.lat},0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>`;
+
+    // Create blob and download
+    const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = site.name.replace(/[^a-z0-9]/gi, '_') + '.kmz';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 // Function to create popup content
 function createPopupContent(properties) {
     let content = '<div class="popup-content">';
@@ -74,6 +124,13 @@ function createPopupContent(properties) {
         content += '</div>';
     }
     
+    // Add KMZ download button
+    content += '<button onclick="downloadKMZ_' + properties.name.replace(/[^a-z0-9]/gi, '_') + '()" ';
+    content += 'style="width: 100%; padding: 10px; margin-top: 10px; ';
+    content += 'background: #1e40af; color: white; border: none; ';
+    content += 'border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold;">';
+    content += '🌍 Open in Google Earth Pro</button>';
+    
     content += '</div>';
     return content;
 }
@@ -83,11 +140,18 @@ fetch('data.json')
     .then(response => response.json())
     .then(data => {
         data.sites.forEach(site => {
-            const marker = L.marker([site.lat, site.lon], { icon: reclaimedIcon })
-                .addTo(map);
-            
-            marker.bindPopup(createPopupContent(site));
-        });
+    const marker = L.marker([site.lat, site.lon], { icon: reclaimedIcon })
+        .addTo(map);
+    
+    marker.bindPopup(createPopupContent(site));
+    
+    // Create unique function for this site's KMZ download
+    const funcName = 'downloadKMZ_' + site.name.replace(/[^a-z0-9]/gi, '_');
+    window[funcName] = function() {
+        generateKMZ(site);
+    };
+});
     })
 
     .catch(error => console.error('Error loading data:', error));
+
