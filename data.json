@@ -1,27 +1,54 @@
 {
   "sites": [
     {
-      "name": "Samal Reclamation",
-      "lat": 7.0712,
-      "lon": 125.7092,
-      "area": 500,
+      "name": "Samal",
+      "lat": 7.071214370350368,
+      "lon": 125.70920272909467,
+      "area": 500.0,
       "status": "ongoing",
       "year started": 2010,
       "year completed": 2015,
       "developer": "PRA",
-      "address": "Samal"
+      "address": "Samal",
+      "notes": "done",
+      "photos": [
+        "https://drive.google.com/uc?export=view&id=1WWlKZFq6LXoO6wn8oBmFutJT1936ed9c",
+        "https://drive.google.com/uc?export=view&id=1dKzmWnsowIPBAL3KE0keICZzxpMzt9ZK"
+      ]
     },
     {
-      "name": "Manila Bay Reclamation",
-      "lat": 14.598081,
-      "lon": 120.950931,
-      "area": 318,
-      "status": "completed",
-      "year started": 2015,
-      "year completed": 2020,
-      "developer": "Private Corp",
-      "address": "Manila"
+      "name": "SM MOA",
+      "lat": 14.5378864697022,
+      "lon": 120.97672555130626,
+      "area": 200.0,
+      "status": "On going",
+      "year started": 2022,
+      "year completed": 2026,
+      "developer": "A",
+      "address": "A",
+      "notes": "A",
+      "photos": [
+        "https://drive.google.com/uc?export=view&id=1ZQkXsEuIP9h0LbbPin8bo2nkkBewG22d",
+        "https://drive.google.com/uc?export=view&id=1Z0vNamrtyMjKyCHBYZ5J1xll2pX7P4K9",
+        "https://drive.google.com/uc?export=view&id=1UIPhklY4KT_46Kui5rhfI2qHS6fyU0Ev"
+      ]
+    },
+    {
+      "name": "Zapote Coastal Bridge",
+      "lat": 14.470742199263134,
+      "lon": 120.96163480489179,
+      "area": 200.0,
+      "status": "Completed",
+      "year started": 2005,
+      "year completed": 2012,
+      "developer": "A",
+      "address": "A",
+      "notes": "A",
+      "photos": [
+        "https://drive.google.com/uc?export=view&id=1cuJlGnA1GeAArsSLCoRc-ZuQHE6BaDSM",
+        "https://drive.google.com/uc?export=view&id=1YbamQwvQr4gqUN-TvdEL7zqYvLHqlJVA",
+        "https://drive.google.com/uc?export=view&id=1nTwSARn4ArRoWJWubaP211tEWiqh1-dy"
+      ]
     }
   ]
 }
-
