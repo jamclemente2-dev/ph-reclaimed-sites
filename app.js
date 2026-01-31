@@ -20,9 +20,12 @@ const reclaimedIcon = L.icon({
     popupAnchor: [0, -32]
 });
 
-// Function to generate KMZ file for a site
+// Global variables for lightbox
+let currentPhotos = [];
+let currentPhotoIndex = 0;
+
+// Function to generate KMZ file
 function generateKMZ(site) {
-    // Create KML content
     const kml = `<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
@@ -59,7 +62,6 @@ function generateKMZ(site) {
   </Document>
 </kml>`;
 
-    // Create blob and download
     const blob = new Blob([kml], { type: 'application/vnd.google-earth.kml+xml' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -70,6 +72,7 @@ function generateKMZ(site) {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
 // Function to create popup content
 function createPopupContent(properties) {
     let content = '<div class="popup-content">';
@@ -124,6 +127,28 @@ function createPopupContent(properties) {
         content += '</div>';
     }
     
+    // Add photo gallery if photos exist
+    if (properties.photos && properties.photos.length > 0) {
+        content += '<div class="photo-gallery">';
+        content += '<h4>📷 Photos (' + properties.photos.length + ')</h4>';
+        content += '<div class="photo-thumbnails">';
+        
+        properties.photos.forEach((photo, index) => {
+            const photoId = 'photo_' + properties.name.replace(/[^a-z0-9]/gi, '_') + '_' + index;
+            content += '<img src="' + photo + '" ';
+            content += 'class="photo-thumbnail" ';
+            content += 'onclick="openLightbox(\'' + photoId + '\')" ';
+            content += 'alt="Photo ' + (index + 1) + '" ';
+            content += 'onerror="this.src=\'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'100\'%3E%3Crect fill=\'%23ddd\' width=\'100\' height=\'100\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\'%3ENo Image%3C/text%3E%3C/svg%3E\'">';
+        });
+        
+        content += '</div>';
+        content += '</div>';
+        
+        // Store photos for lightbox
+        window['photos_' + properties.name.replace(/[^a-z0-9]/gi, '_')] = properties.photos;
+    }
+    
     // Add KMZ download button
     content += '<button onclick="downloadKMZ_' + properties.name.replace(/[^a-z0-9]/gi, '_') + '()" ';
     content += 'style="width: 100%; padding: 10px; margin-top: 10px; ';
@@ -140,18 +165,72 @@ fetch('data.json')
     .then(response => response.json())
     .then(data => {
         data.sites.forEach(site => {
-    const marker = L.marker([site.lat, site.lon], { icon: reclaimedIcon })
-        .addTo(map);
-    
-    marker.bindPopup(createPopupContent(site));
-    
-    // Create unique function for this site's KMZ download
-    const funcName = 'downloadKMZ_' + site.name.replace(/[^a-z0-9]/gi, '_');
-    window[funcName] = function() {
-        generateKMZ(site);
-    };
-});
+            const marker = L.marker([site.lat, site.lon], { icon: reclaimedIcon })
+                .addTo(map);
+            
+            marker.bindPopup(createPopupContent(site), { maxWidth: 350 });
+            
+            // Create unique function for this site's KMZ download
+            const funcName = 'downloadKMZ_' + site.name.replace(/[^a-z0-9]/gi, '_');
+            window[funcName] = function() {
+                generateKMZ(site);
+            };
+        });
     })
-
     .catch(error => console.error('Error loading data:', error));
 
+// Lightbox functions
+function openLightbox(photoId) {
+    const parts = photoId.split('_');
+    const siteName = parts.slice(1, -1).join('_');
+    const photoIndex = parseInt(parts[parts.length - 1]);
+    
+    currentPhotos = window['photos_' + siteName];
+    currentPhotoIndex = photoIndex;
+    
+    document.getElementById('lightbox-img').src = currentPhotos[currentPhotoIndex];
+    document.getElementById('lightbox-counter').textContent = (currentPhotoIndex + 1) + ' / ' + currentPhotos.length;
+    document.getElementById('lightbox').classList.add('active');
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+}
+
+function changePhoto(direction) {
+    currentPhotoIndex += direction;
+    
+    if (currentPhotoIndex < 0) {
+        currentPhotoIndex = currentPhotos.length - 1;
+    } else if (currentPhotoIndex >= currentPhotos.length) {
+        currentPhotoIndex = 0;
+    }
+    
+    document.getElementById('lightbox-img').src = currentPhotos[currentPhotoIndex];
+    document.getElementById('lightbox-counter').textContent = (currentPhotoIndex + 1) + ' / ' + currentPhotos.length;
+}
+
+// Close lightbox with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeLightbox();
+    }
+});
+
+// Navigate photos with arrow keys
+document.addEventListener('keydown', function(e) {
+    if (document.getElementById('lightbox').classList.contains('active')) {
+        if (e.key === 'ArrowLeft') {
+            changePhoto(-1);
+        } else if (e.key === 'ArrowRight') {
+            changePhoto(1);
+        }
+    }
+});
+
+// Close lightbox when clicking outside the image
+document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeLightbox();
+    }
+});
