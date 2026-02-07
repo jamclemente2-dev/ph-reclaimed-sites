@@ -1,55 +1,227 @@
 {
   "sites": [
     {
-      "name": "Samal",
-      "lat": 7.071214370350368,
-      "lon": 125.70920272909467,
-      "area": 500.0,
-      "status": "ongoing",
-      "year started": 2010,
-      "year completed": 2015,
-      "developer": "PRA",
-      "address": "Samal",
-      "notes": "done",
-      "photos": [
-        "https://drive.google.com/uc?export=view&id=1WWlKZFq6LXoO6wn8oBmFutJT1936ed9c",
-        "https://lh3.googleusercontent.com/d/1dKzmWnsowIPBAL3KE0keICZzxpMzt9ZK"
-      ]
-    },
-    {
-      "name": "SM MOA",
-      "lat": 14.5378864697022,
-      "lon": 120.97672555130626,
-      "area": 200.0,
-      "status": "On going",
-      "year started": 2022,
-      "year completed": 2026,
-      "developer": "A",
-      "address": "A",
-      "notes": "A",
-      "photos": [
-        "https://lh3.googleusercontent.com/d/1ZQkXsEuIP9h0LbbPin8bo2nkkBewG22d",
-        "https://lh3.googleusercontent.com/d/1Z0vNamrtyMjKyCHBYZ5J1xll2pX7P4K9",
-        "https://lh3.googleusercontent.com/d/1UIPhklY4KT_46Kui5rhfI2qHS6fyU0Ev"
-      ]
-    },
-    {
-      "name": "Zapote Coastal Bridge",
-      "lat": 14.470742199263134,
-      "lon": 120.96163480489179,
-      "area": 200.0,
+      "name": "Zamboanga City Port",
+      "lat": 6.902949,
+      "lon": 122.073857,
       "status": "Completed",
-      "year started": 2005,
-      "year completed": 2012,
-      "developer": "A",
-      "address": "A",
-      "notes": "A",
+      "year started": "1831",
+      "year completed": "2025",
+      "developer": "",
+      "author": "AGF",
+      "notes": "With on-going govt projects",
+      "address": "Barangay Zone 3 Poblacion, Zamboanga City, Zamboanga del Sur",
       "photos": [
-        "https://lh3.googleusercontent.com/d/1cuJlGnA1GeAArsSLCoRc-ZuQHE6BaDSM",
-        "https://lh3.googleusercontent.com/d/1YbamQwvQr4gqUN-TvdEL7zqYvLHqlJVA",
-        "https://lh3.googleusercontent.com/d/1nTwSARn4ArRoWJWubaP211tEWiqh1-dy"
+        "https://lh3.googleusercontent.com/d/1T-R4mUAWCoS9ktpFT7zFcXvZulrSPHfW"
+      ]
+    },
+    {
+      "name": "Paseo del Mar",
+      "lat": 6.900461,
+      "lon": 122.08124,
+      "status": "Completed",
+      "year started": "N/A",
+      "year completed": "2009",
+      "developer": "",
+      "author": "AGF",
+      "notes": "",
+      "address": "Barangay Zone 3 Poblacion, Zamboanga City, Zamboanga del Sur",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1bhRPsGrdKn3KkmezH3-YkyK4MBkG873t"
+      ]
+    },
+    {
+      "name": "Hamilo Coast Terminal",
+      "lat": 14.18249,
+      "lon": 120.601914,
+      "status": "Completed",
+      "year started": "pre-2010",
+      "year completed": "2013",
+      "developer": "",
+      "author": "AGF",
+      "notes": "Small boat port",
+      "address": "Papaya, Nasugbu, Batangas",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1rpZellqZhCkQJWax6Ws5hNcvEya_L09E",
+        "https://lh3.googleusercontent.com/d/1JTRX8bOoHtKSp01emywVdfyJr7PmnmLe"
+      ]
+    },
+    {
+      "name": "Papaya Cove Ports",
+      "lat": 14.175632,
+      "lon": 120.606667,
+      "status": "On-Going",
+      "year started": "Pre-2010",
+      "year completed": "N/A",
+      "developer": "",
+      "author": "AGF",
+      "notes": "",
+      "address": "Papaya, Nasugbu, Batangas",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1f5MHpe6z76eqoeE6uvlEkdIy5GIRrpRc",
+        "https://lh3.googleusercontent.com/d/1qJXgzuG9GjnhNfjW86h5R126miNrhvKc"
+      ]
+    },
+    {
+      "name": "Papaya Cove Resorts",
+      "lat": 14.174311,
+      "lon": 120.604036,
+      "status": "Cmpleted",
+      "year started": "2018",
+      "year completed": "2024",
+      "developer": "",
+      "author": "AGF",
+      "notes": "Resort Area",
+      "address": "Papaya, Nasugbu, Batangas",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1DtqNaq9HW4mvDGeTodpzS0PMrV3SdHaJ",
+        "https://lh3.googleusercontent.com/d/1LWzIZIjoSGaBquW3WcVLuK1E4o_FsiCx",
+        "https://lh3.googleusercontent.com/d/1ckwDqEdc7nYQiiSuhtYJtX25IHXdgOt1"
+      ]
+    },
+    {
+      "name": "Samal",
+      "lat": 7.071214,
+      "lon": 125.709203,
+      "status": "ongoing",
+      "year started": "2010",
+      "year completed": "2015",
+      "developer": "Philippine Reclamation Authority",
+      "author": "CLSA",
+      "notes": "",
+      "address": "Peñaplata, Island City of Samal, Davao del Norte",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1HTxqGCbIteLdL_wttHjktxCVm8gr5g5M",
+        "https://lh3.googleusercontent.com/d/11r2f57lxiPd8QP6xj8hDImX9Y3W2rCzE",
+        "https://lh3.googleusercontent.com/d/1SJ_RB1lUXN8kTm9FxW8w6-qLTG93u5hz",
+        "https://lh3.googleusercontent.com/d/1bS48mRj2htTk7wlbmyWLSlTMA1ByynLn"
+      ]
+    },
+    {
+      "name": "Mariveles Power Generaton Corporation",
+      "lat": 14.446785,
+      "lon": 120.433437,
+      "status": "completed",
+      "year started": "2020L",
+      "year completed": "2025",
+      "developer": "Mariveles Power Generation Corporation",
+      "author": "CLSA",
+      "notes": "cut and fill and eventual shoreline extension for additional land area of the port/harbor area; built on sand",
+      "address": "Biaan, Mariveles, Bataan",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1R75z-39LmCGaypegC5jIldsLGyjmnCZF",
+        "https://lh3.googleusercontent.com/d/1RdKcvStbQDlsC4HH4CNtMpg8iRTmH_E1",
+        "https://lh3.googleusercontent.com/d/1LvrFThbztLQ2Qw3IHJo_QsfuX2j1kg0Q",
+        "https://lh3.googleusercontent.com/d/1_7dTGyH-RH5m324BqneHvwlJjuQedUuN"
+      ]
+    },
+    {
+      "name": "Mariveles Harbor Corporation",
+      "lat": 14.428371,
+      "lon": 120.51236,
+      "status": "completed",
+      "year started": "2014",
+      "year completed": "2019",
+      "developer": "Mariveles Harbor Corporation?",
+      "author": "CLSA",
+      "notes": "extended land area with harbor; built on sand",
+      "address": "Sisiman, Mariveles, Bataan",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1R75z-39LmCGaypegC5jIldsLGyjmnCZF",
+        "https://lh3.googleusercontent.com/d/1RdKcvStbQDlsC4HH4CNtMpg8iRTmH_E1",
+        "https://lh3.googleusercontent.com/d/1LvrFThbztLQ2Qw3IHJo_QsfuX2j1kg0Q",
+        "https://lh3.googleusercontent.com/d/1_7dTGyH-RH5m324BqneHvwlJjuQedUuN"
+      ]
+    },
+    {
+      "name": "Planters Aggregates, Inc.",
+      "lat": 14.428168,
+      "lon": 120.527366,
+      "status": "ongoing",
+      "year started": "2022",
+      "year completed": "2025",
+      "developer": "Planters Aggregates, Inc.",
+      "author": "CLSA",
+      "notes": "extended shoreline for additional land area; built on sand",
+      "address": "Sisiman, Mariveles, Bataan",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1m636y3z5POznOXgGwwV7cJxsBaGG7yD-",
+        "https://lh3.googleusercontent.com/d/17pt1iCsoErlSjorI9sGg5tCMlFpwBqHJ",
+        "https://lh3.googleusercontent.com/d/1YbdebkSUpMuqXhs1h6IpLKicXVgIFZah",
+        "https://lh3.googleusercontent.com/d/1SvaqwfhLBcOCnzLDB8vay_2DvsHk8AjZ"
+      ]
+    },
+    {
+      "name": "Premium Megastructures, Inc. (?)",
+      "lat": 14.421782,
+      "lon": 120.554333,
+      "status": "completed",
+      "year started": "2021",
+      "year completed": "2025",
+      "developer": "n/a",
+      "author": "CLSA",
+      "notes": "shoreline extension; built on sand",
+      "address": "Alas-asin, Mariveles, Bataan",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1JErZnJVLG7L_-2Hy6-Vf4URl9R_Kplew",
+        "https://lh3.googleusercontent.com/d/1aUw3IZLD-oCPCV18P8ZVZ_x0X7G7LYnW",
+        "https://lh3.googleusercontent.com/d/1zJ3rdl0ZsH1q0I-EFFCzXD08bXSzLuaq",
+        "https://lh3.googleusercontent.com/d/1nIiKMQGc6vSOTUn5TcQB9O55aMaaM99r"
+      ]
+    },
+    {
+      "name": "Seafront Shipyard and Port Terminal Services, Inc.",
+      "lat": 14.458137,
+      "lon": 120.600912,
+      "status": "completed",
+      "year started": "2017",
+      "year completed": "2024",
+      "developer": "Seafront Shipyard and Port Terminal Services, Inc.",
+      "author": "CLSA",
+      "notes": "for construction of main RC pier and trestle and construction of 20-hectare back-up area; built on sand",
+      "address": "Townsite, Mariveles, Bataan",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1_rtqlz0HTa2pOkL8ffHg-m02oYZq_23d",
+        "https://lh3.googleusercontent.com/d/1aV6R3jH-CuKUxS72_RCdGCmmlnXeRX4T",
+        "https://lh3.googleusercontent.com/d/1-hsB1XRVHlLs3gBz98_Fodifg3pPPhtn",
+        "https://lh3.googleusercontent.com/d/1KWfO0jmF4S1DoxmsxEoYjdJ6xMwgxRPA"
+      ]
+    },
+    {
+      "name": "Limay Power Plant",
+      "lat": 14.524311,
+      "lon": 120.609093,
+      "status": "completed",
+      "year started": "2017",
+      "year completed": "2024",
+      "developer": "San Miguel Corporation",
+      "author": "CLSA",
+      "notes": "build on sand",
+      "address": "Alangan, Limay, Bataan",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1q2vTtBoqdih91PLd2uK0wd264cUeHA9m",
+        "https://lh3.googleusercontent.com/d/1Zf1yG_aWbD4q9GZLA6U2iiUVuZvpKL6x",
+        "https://lh3.googleusercontent.com/d/1WfxPghAbD0h0rahwUi_F3aBW5m3ifdN-",
+        "https://lh3.googleusercontent.com/d/1UxXJQF6Kw-tc_k8DK6Kg9O_abqp2txJQ"
+      ]
+    },
+    {
+      "name": "Limay Coastal Road/Park",
+      "lat": 14.558599,
+      "lon": 120.600067,
+      "status": "ongoing",
+      "year started": "2020",
+      "year completed": "2025",
+      "developer": "Limay LGU?",
+      "author": "CLSA",
+      "notes": "for coastal road/park; built on sand",
+      "address": "Limay, Bataan",
+      "photos": [
+        "https://lh3.googleusercontent.com/d/1E6HIWZGPj3GKir-5rKfA3ObCTrxoTr2M",
+        "https://lh3.googleusercontent.com/d/1KiqPUUPSBKEfHQoC00UR9Dvyz9s4eNV1",
+        "https://lh3.googleusercontent.com/d/131G6DTdg69lVtKQFpqbUuMoulKAmeUOS",
+        "https://lh3.googleusercontent.com/d/1P8RHNYZVrNleeCJ3PgnekYJHwpkbOggn"
       ]
     }
   ]
 }
-
