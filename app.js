@@ -30,6 +30,9 @@ let allMarkers = [];
 
 // Function to search sites
 function searchSites(query) {
+    console.log('Search called with query:', query);
+    console.log('Total sites available:', allSites.length);
+    
     const searchResults = document.getElementById('search-results');
     const lowerQuery = query.toLowerCase().trim();
     
@@ -44,10 +47,14 @@ function searchSites(query) {
         const barangay = (site.barangay || '').toLowerCase();
         const municipality = (site.municipality || '').toLowerCase();
         
+        console.log('Checking site:', name, 'barangay:', barangay, 'municipality:', municipality);
+        
         return name.includes(lowerQuery) || 
                barangay.includes(lowerQuery) || 
                municipality.includes(lowerQuery);
     });
+    
+    console.log('Found results:', results.length);
     
     // Display results
     if (results.length === 0) {
@@ -153,41 +160,55 @@ function createPopupContent(properties) {
     let content = '<div class="popup-content">';
     content += '<h3>' + (properties.name || 'Unnamed Site') + '</h3>';
     
-    // Always show all fields, even if empty
-    content += '<div class="info-row">';
-    content += '<span class="label">Status:</span>';
-    content += '<span class="value">' + (properties.status || '') + '</span>';
-    content += '</div>';
+    // Only show fields if they have data
+    if (properties.status) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Status:</span>';
+        content += '<span class="value">' + properties.status + '</span>';
+        content += '</div>';
+    }
     
-    content += '<div class="info-row">';
-    content += '<span class="label">Year Started:</span>';
-    content += '<span class="value">' + (properties['year started'] || '') + '</span>';
-    content += '</div>';
+    if (properties['year started']) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Year Started:</span>';
+        content += '<span class="value">' + properties['year started'] + '</span>';
+        content += '</div>';
+    }
     
-    content += '<div class="info-row">';
-    content += '<span class="label">Year Completed:</span>';
-    content += '<span class="value">' + (properties['year completed'] || '') + '</span>';
-    content += '</div>';
+    if (properties['year completed']) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Year Completed:</span>';
+        content += '<span class="value">' + properties['year completed'] + '</span>';
+        content += '</div>';
+    }
     
-    content += '<div class="info-row">';
-    content += '<span class="label">Developer:</span>';
-    content += '<span class="value">' + (properties.developer || '') + '</span>';
-    content += '</div>';
+    if (properties.developer) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Developer:</span>';
+        content += '<span class="value">' + properties.developer + '</span>';
+        content += '</div>';
+    }
     
-    content += '<div class="info-row">';
-    content += '<span class="label">Location:</span>';
-    content += '<span class="value">' + (properties.address || '') + '</span>';
-    content += '</div>';
+    if (properties.address) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Location:</span>';
+        content += '<span class="value">' + properties.address + '</span>';
+        content += '</div>';
+    }
     
-    content += '<div class="info-row">';
-    content += '<span class="label">Data by:</span>';
-    content += '<span class="value">' + (properties.author || '') + '</span>';
-    content += '</div>';
+    if (properties.author) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Data by:</span>';
+        content += '<span class="value">' + properties.author + '</span>';
+        content += '</div>';
+    }
     
-    content += '<div class="info-row">';
-    content += '<span class="label">Notes:</span>';
-    content += '<span class="value">' + (properties.notes || '') + '</span>';
-    content += '</div>';
+    if (properties.notes) {
+        content += '<div class="info-row">';
+        content += '<span class="label">Notes:</span>';
+        content += '<span class="value">' + properties.notes + '</span>';
+        content += '</div>';
+    }
     
     // Add photo gallery if photos exist
     if (properties.photos && properties.photos.length > 0) {
@@ -226,13 +247,21 @@ function createPopupContent(properties) {
 fetch('data.json')
     .then(response => response.json())
     .then(data => {
+        console.log('Data loaded successfully!');
+        console.log('Number of sites:', data.sites.length);
+        
         allSites = data.sites; // Store for search
+        
+        console.log('First site data:', allSites[0]);
         
         data.sites.forEach(site => {
             const marker = L.marker([site.lat, site.lon], { icon: reclaimedIcon })
                 .addTo(map);
             
-            marker.bindPopup(createPopupContent(site), { maxWidth: 350 });
+            marker.bindPopup(createPopupContent(site), { 
+                maxWidth: 300,
+                maxHeight: 400
+            });
             
             // Store marker reference for search
             allMarkers.push({
@@ -247,32 +276,52 @@ fetch('data.json')
             };
         });
         
+        console.log('All sites stored:', allSites.length);
+        console.log('All markers stored:', allMarkers.length);
+        
         // Set up search event listeners after data is loaded
         const searchInput = document.getElementById('search-input');
         const searchButton = document.getElementById('search-button');
         const clearButton = document.getElementById('clear-button');
         
+        if (!searchInput || !searchButton || !clearButton) {
+            console.error('Search elements not found!');
+            console.log('searchInput:', searchInput);
+            console.log('searchButton:', searchButton);
+            console.log('clearButton:', clearButton);
+            return;
+        }
+        
+        console.log('Setting up search event listeners...');
+        
         // Search on button click
         searchButton.addEventListener('click', () => {
+            console.log('Search button clicked');
             searchSites(searchInput.value);
         });
         
         // Search on Enter key
         searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') {
+                console.log('Enter key pressed');
                 searchSites(searchInput.value);
             } else {
-                // Live search as user types (optional)
+                // Live search as user types
                 searchSites(searchInput.value);
             }
         });
         
         // Clear search
-        clearButton.addEventListener('click', clearSearch);
+        clearButton.addEventListener('click', () => {
+            console.log('Clear button clicked');
+            clearSearch();
+        });
         
-        console.log('Loaded ' + allSites.length + ' sites');
+        console.log('Search setup complete! Try searching now.');
     })
-    .catch(error => console.error('Error loading data:', error));
+    .catch(error => {
+        console.error('Error loading data:', error);
+    });
 
 // Lightbox functions
 function openLightbox(photoId) {
