@@ -24,6 +24,81 @@ const reclaimedIcon = L.icon({
 let currentPhotos = [];
 let currentPhotoIndex = 0;
 
+// Global variables for search
+let allSites = [];
+let allMarkers = [];
+
+// Function to search sites
+function searchSites(query) {
+    const searchResults = document.getElementById('search-results');
+    const lowerQuery = query.toLowerCase().trim();
+    
+    if (!lowerQuery) {
+        searchResults.classList.remove('active');
+        return;
+    }
+    
+    // Search in name, barangay, and municipality
+    const results = allSites.filter(site => {
+        const name = (site.name || '').toLowerCase();
+        const barangay = (site.barangay || '').toLowerCase();
+        const municipality = (site.municipality || '').toLowerCase();
+        
+        return name.includes(lowerQuery) || 
+               barangay.includes(lowerQuery) || 
+               municipality.includes(lowerQuery);
+    });
+    
+    // Display results
+    if (results.length === 0) {
+        searchResults.innerHTML = '<div class="no-results">No results found</div>';
+        searchResults.classList.add('active');
+    } else {
+        let html = '';
+        results.forEach((site, index) => {
+            html += '<div class="search-result-item" onclick="zoomToSite(' + index + ', \'' + 
+                    site.name.replace(/'/g, "\\'") + '\')">';
+            html += '<div class="result-name">' + site.name + '</div>';
+            html += '<div class="result-location">' + (site.address || 'Location not specified') + '</div>';
+            html += '</div>';
+        });
+        searchResults.innerHTML = html;
+        searchResults.classList.add('active');
+        
+        // Store filtered results for zooming
+        window.searchResults = results;
+    }
+}
+
+// Function to zoom to a site from search results
+function zoomToSite(index, siteName) {
+    const site = window.searchResults[index];
+    
+    // Find the marker for this site
+    const marker = allMarkers.find(m => m.site.name === siteName);
+    
+    if (marker) {
+        // Zoom to marker
+        map.setView([site.lat, site.lon], 15);
+        
+        // Open popup
+        setTimeout(() => {
+            marker.leafletMarker.openPopup();
+        }, 500);
+        
+        // Clear search
+        document.getElementById('search-input').value = '';
+        document.getElementById('search-results').classList.remove('active');
+    }
+}
+
+// Function to clear search
+function clearSearch() {
+    document.getElementById('search-input').value = '';
+    document.getElementById('search-results').classList.remove('active');
+    document.getElementById('search-results').innerHTML = '';
+}
+
 // Function to generate KMZ file
 function generateKMZ(site) {
     const kml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -151,11 +226,19 @@ function createPopupContent(properties) {
 fetch('data.json')
     .then(response => response.json())
     .then(data => {
+        allSites = data.sites; // Store for search
+        
         data.sites.forEach(site => {
             const marker = L.marker([site.lat, site.lon], { icon: reclaimedIcon })
                 .addTo(map);
             
             marker.bindPopup(createPopupContent(site), { maxWidth: 350 });
+            
+            // Store marker reference for search
+            allMarkers.push({
+                site: site,
+                leafletMarker: marker
+            });
             
             // Create unique function for this site's KMZ download
             const funcName = 'downloadKMZ_' + site.name.replace(/[^a-z0-9]/gi, '_');
@@ -163,6 +246,31 @@ fetch('data.json')
                 generateKMZ(site);
             };
         });
+        
+        // Set up search event listeners after data is loaded
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const clearButton = document.getElementById('clear-button');
+        
+        // Search on button click
+        searchButton.addEventListener('click', () => {
+            searchSites(searchInput.value);
+        });
+        
+        // Search on Enter key
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                searchSites(searchInput.value);
+            } else {
+                // Live search as user types (optional)
+                searchSites(searchInput.value);
+            }
+        });
+        
+        // Clear search
+        clearButton.addEventListener('click', clearSearch);
+        
+        console.log('Loaded ' + allSites.length + ' sites');
     })
     .catch(error => console.error('Error loading data:', error));
 
