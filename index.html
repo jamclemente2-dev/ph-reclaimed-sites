@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Philippine Reclaimed Sites Map">
-    <meta name="theme-color" content="#1e40af">
-    <link rel="manifest" href="manifest.json">
     <title>Philippine Reclaimed Sites</title>
-    
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <style>
@@ -19,7 +14,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: Arial, sans-serif;
             height: 100vh;
             overflow: hidden;
         }
@@ -151,49 +146,7 @@
             font-size: 14px;
         }
 
-        .install-banner {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: #1e40af;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            display: none;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .install-banner button {
-            background: white;
-            color: #1e40af;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .install-banner .close {
-            background: transparent;
-            color: white;
-            padding: 4px 8px;
-        }
-
-        /* Custom popup styling */
-        .leaflet-popup-content-wrapper {
-            border-radius: 8px;
-            box-shadow: 0 3px 14px rgba(0,0,0,0.4);
-        }
-
-        .popup-content {
-            padding: 10px;
-            min-width: 250px;
-        }
-
+        /* Popup Styles */
         .popup-content h3 {
             color: #1e40af;
             margin-bottom: 10px;
@@ -223,58 +176,125 @@
 
         /* Make popup scrollable if too tall */
         .leaflet-popup-content {
-            max-height: 400px;
+            max-height: 450px;
             overflow-y: auto;
         }
 
-        .popup-content .notes {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
-            font-size: 13px;
-            color: #666;
+        /* Photo Gallery Styles - 2 COLUMNS */
+        .photo-gallery {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
+        .photo-gallery h4 {
+            margin-bottom: 8px;
+            color: #1e40af;
+            font-size: 13px;
             font-weight: bold;
         }
 
-        .status-ongoing {
-            background: #fef3c7;
-            color: #92400e;
+        .photo-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            margin-top: 8px;
         }
 
-        .status-completed {
-            background: #d1fae5;
-            color: #065f46;
+        .photo-thumbnail {
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid #ddd;
         }
 
-        .status-planned {
-            background: #dbeafe;
-            color: #1e40af;
+        .photo-thumbnail:hover {
+            transform: scale(1.05);
+            border-color: #1e40af;
+            box-shadow: 0 3px 10px rgba(30, 64, 175, 0.3);
         }
 
-        .offline-indicator {
-            position: absolute;
-            top: 80px;
-            right: 10px;
-            z-index: 1000;
-            background: #ef4444;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 12px;
+        /* Lightbox Styles */
+        .lightbox {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .offline-indicator.show {
-            display: block;
+        .lightbox.active {
+            display: flex;
         }
 
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-weight: bold;
+        }
+
+        .lightbox-close:hover {
+            color: #ccc;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 50px;
+            color: white;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .header {
                 top: 5px;
@@ -292,12 +312,21 @@
                 font-size: 11px;
             }
 
-            .install-banner {
-                bottom: 10px;
+            .photo-thumbnail {
+                height: 80px;
+            }
+
+            .lightbox-nav {
+                font-size: 30px;
+                padding: 5px 15px;
+            }
+
+            .lightbox-prev {
                 left: 10px;
+            }
+
+            .lightbox-next {
                 right: 10px;
-                transform: none;
-                font-size: 13px;
             }
         }
     </style>
@@ -314,76 +343,18 @@
         <div id="search-results"></div>
     </div>
 
-    <div class="offline-indicator" id="offlineIndicator">
-        📡 Offline Mode
-    </div>
-
-    <div class="install-banner" id="installBanner">
-        <span>📱 Install this app for offline access</span>
-        <button id="installBtn">Install</button>
-        <button class="close" id="closeInstall">✕</button>
-    </div>
-
     <div id="map"></div>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Lightbox for viewing photos -->
+    <div id="lightbox" class="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">×</button>
+        <button class="lightbox-nav lightbox-prev" onclick="changePhoto(-1)">‹</button>
+        <img id="lightbox-img" src="" alt="Site photo">
+        <button class="lightbox-nav lightbox-next" onclick="changePhoto(1)">›</button>
+        <div class="lightbox-counter" id="lightbox-counter"></div>
+    </div>
     
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="app.js"></script>
-    <script>
-        // Register service worker for offline functionality
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered:', registration);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
-
-        // PWA install prompt
-        let deferredPrompt;
-        const installBanner = document.getElementById('installBanner');
-        const installBtn = document.getElementById('installBtn');
-        const closeInstall = document.getElementById('closeInstall');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBanner.style.display = 'flex';
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response: ${outcome}`);
-                deferredPrompt = null;
-                installBanner.style.display = 'none';
-            }
-        });
-
-        closeInstall.addEventListener('click', () => {
-            installBanner.style.display = 'none';
-        });
-
-        // Offline indicator
-        const offlineIndicator = document.getElementById('offlineIndicator');
-
-        function updateOnlineStatus() {
-            if (!navigator.onLine) {
-                offlineIndicator.classList.add('show');
-            } else {
-                offlineIndicator.classList.remove('show');
-            }
-        }
-
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-        updateOnlineStatus();
-    </script>
 </body>
 </html>
