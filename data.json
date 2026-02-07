@@ -78,7 +78,7 @@
       "name": "Papaya Cove Resorts",
       "lat": 14.174311,
       "lon": 120.604036,
-      "status": "Cmpleted",
+      "status": "Completed",
       "year started": "2018",
       "year completed": "2024",
       "developer": "",
@@ -120,7 +120,7 @@
       "lat": 14.446785,
       "lon": 120.433437,
       "status": "completed",
-      "year started": "2020L",
+      "year started": "2020",
       "year completed": "2025",
       "developer": "Mariveles Power Generation Corporation",
       "author": "CLSA",
@@ -264,3 +264,4 @@
     }
   ]
 }
+
