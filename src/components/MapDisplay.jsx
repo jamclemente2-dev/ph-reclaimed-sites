@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, LayersControl } from 'react-leaflet';
 import L from 'leaflet';
+
+const { BaseLayer } = LayersControl;
 
 // ── Marker icon helpers ───────────────────────────────────────────────────────
 
@@ -96,11 +98,22 @@ function MapDisplay({ sites, onPhotoClick }) {
       zoom={6}
       style={{ width: '100%', height: '100vh' }}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        maxZoom={19}
-      />
+      <LayersControl position="topright">
+        <BaseLayer checked name="Street">
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maxZoom={19}
+          />
+        </BaseLayer>
+        <BaseLayer name="Satellite">
+          <TileLayer
+            attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            maxZoom={19}
+          />
+        </BaseLayer>
+      </LayersControl>
 
       {sites.map((site, index) => (
         <Marker
