@@ -1,5 +1,4 @@
 import { SlidersHorizontal, X } from 'lucide-react';
-import FileUploader from './FileUploader';
 
 const FILTER_FIELDS = [
   { key: 'name',         label: 'Name',         placeholder: 'Search by name…' },
@@ -13,7 +12,6 @@ function SearchSidebar({
   filters,
   onFilterChange,
   onClearFilters,
-  onDataLoaded,
   totalSites,
   visibleSites,
 }) {
@@ -56,10 +54,6 @@ function SearchSidebar({
             Clear Filters
           </button>
         )}
-      </div>
-
-      <div className="sidebar-section">
-        <FileUploader onDataLoaded={onDataLoaded} />
       </div>
 
       <div className="legend">

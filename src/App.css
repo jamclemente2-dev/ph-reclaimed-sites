@@ -146,44 +146,6 @@ body {
   background: #fee2e2;
 }
 
-/* ── File uploader ───────────────────────────────────── */
-
-.upload-hint {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-bottom: 10px;
-  line-height: 1.5;
-}
-
-.upload-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 10px 14px;
-  background: #f0f9ff;
-  color: #0369a1;
-  border: 1.5px dashed #7dd3fc;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
-}
-
-.upload-btn:hover {
-  background: #e0f2fe;
-  border-color: #38bdf8;
-}
-
-.upload-status {
-  margin-top: 8px;
-  font-size: 12px;
-  color: #059669;
-  font-weight: 500;
-}
-
 /* ── Legend ──────────────────────────────────────────── */
 
 .legend {
