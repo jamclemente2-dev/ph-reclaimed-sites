@@ -43,11 +43,6 @@ function App() {
     setFilters(INITIAL_FILTERS);
   }, []);
 
-  const handleDataLoaded = useCallback((sites) => {
-    setAllSites(sites);
-    setFilters(INITIAL_FILTERS);
-  }, []);
-
   const openLightbox = useCallback((photos, index) => {
     setLightbox({ open: true, photos, index });
   }, []);
@@ -62,7 +57,6 @@ function App() {
         filters={filters}
         onFilterChange={handleFilterChange}
         onClearFilters={handleClearFilters}
-        onDataLoaded={handleDataLoaded}
         totalSites={allSites.length}
         visibleSites={filteredSites.length}
       />
