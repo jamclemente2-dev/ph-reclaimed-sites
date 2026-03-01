@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup } from 'react-leaflet';
 import L from 'leaflet';
+import reclamationGeoJson from '../data/ReclamationPolygons.geojson';
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -92,15 +93,6 @@ function SitePopup({ site, onPhotoClick }) {
 // ── Map component ─────────────────────────────────────────────────────────────
 
 function MapDisplay({ sites, onPhotoClick }) {
-  const [geoJsonData, setGeoJsonData] = useState(null);
-
-  // Fetch GeoJSON polygon file from public directory on mount
-  useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}ReclamationPolygons.geojson`)
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-      .then(data => setGeoJsonData(data))
-      .catch(err => console.warn('Polygon GeoJSON not loaded, falling back to embedded data:', err.message));
-  }, []);
 
   // Build name → site lookup for matching GeoJSON features to site records
   const sitesByName = useMemo(() => {
@@ -112,13 +104,13 @@ function MapDisplay({ sites, onPhotoClick }) {
   // Convert GeoJSON features to flat list of { positions, site } for rendering.
   // GeoJSON coordinates are [lon, lat]; Leaflet expects [lat, lon].
   const geoJsonPolygons = useMemo(() => {
-    if (!geoJsonData?.features) return null;
+    if (!reclamationGeoJson?.features) return null;
     const result = [];
-    geoJsonData.features.forEach((feature, fi) => {
+    reclamationGeoJson.features.forEach((feature, fi) => {
       const geom = feature.geometry;
       const props = feature.properties || {};
       const site = sitesByName[props.name] || props;
-      const color = getStatusColor(props.status);
+      const color = getStatusColor(site.status);
 
       const rings =
         geom?.type === 'Polygon'      ? [geom.coordinates[0]] :
@@ -135,20 +127,9 @@ function MapDisplay({ sites, onPhotoClick }) {
       });
     });
     return result;
-  }, [geoJsonData, sitesByName]);
+  }, [sitesByName]);
 
-  // Embedded polygon fallback (used when GeoJSON hasn't loaded yet)
-  const embeddedPolygons = useMemo(
-    () => sites.filter(s => Array.isArray(s.polygon) && s.polygon.length >= 3),
-    [sites],
-  );
-
-  const polygonsToRender = geoJsonPolygons ?? embeddedPolygons.map((site, i) => ({
-    key: `poly-${site.name}-${i}`,
-    positions: site.polygon,
-    site,
-    color: getStatusColor(site.status),
-  }));
+  const polygonsToRender = geoJsonPolygons ?? [];
 
   return (
     <MapContainer
@@ -171,7 +152,7 @@ function MapDisplay({ sites, onPhotoClick }) {
             maxZoom={19}
           />
         </BaseLayer>
-        <Overlay name="Polygon Areas">
+        <Overlay checked name="Polygon Areas">
           <FeatureGroup>
             {polygonsToRender.map(({ key, positions, site, color }) => (
               <Polygon
