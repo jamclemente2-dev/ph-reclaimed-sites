@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup } from 'react-leaflet';
 import L from 'leaflet';
-import reclamationGeoJson from '../data/ReclamationPolygons.geojson';
+import reclamationGeoJson from '../data/ReclamationPolygons.json';
 
 const { BaseLayer, Overlay } = LayersControl;
 
