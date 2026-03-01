@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup } from 'react-leaflet';
 import L from 'leaflet';
 
@@ -92,6 +92,64 @@ function SitePopup({ site, onPhotoClick }) {
 // ── Map component ─────────────────────────────────────────────────────────────
 
 function MapDisplay({ sites, onPhotoClick }) {
+  const [geoJsonData, setGeoJsonData] = useState(null);
+
+  // Fetch GeoJSON polygon file from public directory on mount
+  useEffect(() => {
+    fetch(`${import.meta.env.BASE_URL}ReclamationPolygons.geojson`)
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(data => setGeoJsonData(data))
+      .catch(err => console.warn('Polygon GeoJSON not loaded, falling back to embedded data:', err.message));
+  }, []);
+
+  // Build name → site lookup for matching GeoJSON features to site records
+  const sitesByName = useMemo(() => {
+    const map = {};
+    sites.forEach(s => { if (s.name) map[s.name] = s; });
+    return map;
+  }, [sites]);
+
+  // Convert GeoJSON features to flat list of { positions, site } for rendering.
+  // GeoJSON coordinates are [lon, lat]; Leaflet expects [lat, lon].
+  const geoJsonPolygons = useMemo(() => {
+    if (!geoJsonData?.features) return null;
+    const result = [];
+    geoJsonData.features.forEach((feature, fi) => {
+      const geom = feature.geometry;
+      const props = feature.properties || {};
+      const site = sitesByName[props.name] || props;
+      const color = getStatusColor(props.status);
+
+      const rings =
+        geom?.type === 'Polygon'      ? [geom.coordinates[0]] :
+        geom?.type === 'MultiPolygon' ? geom.coordinates.map(poly => poly[0]) :
+        [];
+
+      rings.forEach((ring, ri) => {
+        result.push({
+          key: `geojson-${fi}-${ri}`,
+          positions: ring.map(([lon, lat]) => [lat, lon]),
+          site,
+          color,
+        });
+      });
+    });
+    return result;
+  }, [geoJsonData, sitesByName]);
+
+  // Embedded polygon fallback (used when GeoJSON hasn't loaded yet)
+  const embeddedPolygons = useMemo(
+    () => sites.filter(s => Array.isArray(s.polygon) && s.polygon.length >= 3),
+    [sites],
+  );
+
+  const polygonsToRender = geoJsonPolygons ?? embeddedPolygons.map((site, i) => ({
+    key: `poly-${site.name}-${i}`,
+    positions: site.polygon,
+    site,
+    color: getStatusColor(site.status),
+  }));
+
   return (
     <MapContainer
       center={[12.8797, 121.774]}
@@ -115,24 +173,17 @@ function MapDisplay({ sites, onPhotoClick }) {
         </BaseLayer>
         <Overlay name="Polygon Areas">
           <FeatureGroup>
-            {sites
-              .filter(site => Array.isArray(site.polygon) && site.polygon.length >= 3)
-              .map((site, index) => (
-                <Polygon
-                  key={`poly-${site.name}-${index}`}
-                  positions={site.polygon}
-                  pathOptions={{
-                    color: getStatusColor(site.status),
-                    fillColor: getStatusColor(site.status),
-                    fillOpacity: 0.25,
-                    weight: 2,
-                  }}
-                >
-                  <Popup maxWidth={300} minWidth={240}>
-                    <SitePopup site={site} onPhotoClick={onPhotoClick} />
-                  </Popup>
-                </Polygon>
-              ))}
+            {polygonsToRender.map(({ key, positions, site, color }) => (
+              <Polygon
+                key={key}
+                positions={positions}
+                pathOptions={{ color, fillColor: color, fillOpacity: 0.25, weight: 2 }}
+              >
+                <Popup maxWidth={300} minWidth={240}>
+                  <SitePopup site={site} onPhotoClick={onPhotoClick} />
+                </Popup>
+              </Polygon>
+            ))}
           </FeatureGroup>
         </Overlay>
       </LayersControl>
