@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, LayersControl } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup } from 'react-leaflet';
 import L from 'leaflet';
 
-const { BaseLayer } = LayersControl;
+const { BaseLayer, Overlay } = LayersControl;
 
 // ── Marker icon helpers ───────────────────────────────────────────────────────
 
@@ -113,6 +113,28 @@ function MapDisplay({ sites, onPhotoClick }) {
             maxZoom={19}
           />
         </BaseLayer>
+        <Overlay name="Polygon Areas">
+          <FeatureGroup>
+            {sites
+              .filter(site => Array.isArray(site.polygon) && site.polygon.length >= 3)
+              .map((site, index) => (
+                <Polygon
+                  key={`poly-${site.name}-${index}`}
+                  positions={site.polygon}
+                  pathOptions={{
+                    color: getStatusColor(site.status),
+                    fillColor: getStatusColor(site.status),
+                    fillOpacity: 0.25,
+                    weight: 2,
+                  }}
+                >
+                  <Popup maxWidth={300} minWidth={240}>
+                    <SitePopup site={site} onPhotoClick={onPhotoClick} />
+                  </Popup>
+                </Polygon>
+              ))}
+          </FeatureGroup>
+        </Overlay>
       </LayersControl>
 
       {sites.map((site, index) => (

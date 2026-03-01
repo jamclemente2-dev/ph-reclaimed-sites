@@ -17,6 +17,12 @@
       "address": "Barangay Zone 3 Poblacion, Zamboanga City, Zamboanga del Sur",
       "photos": [
         "https://lh3.googleusercontent.com/d/1T-R4mUAWCoS9ktpFT7zFcXvZulrSPHfW"
+      ],
+      "polygon": [
+        [6.906, 122.069],
+        [6.906, 122.079],
+        [6.900, 122.079],
+        [6.900, 122.069]
       ]
     },
     {
@@ -36,6 +42,12 @@
       "address": "Barangay Zone 3 Poblacion, Zamboanga City, Zamboanga del Sur",
       "photos": [
         "https://lh3.googleusercontent.com/d/1bhRPsGrdKn3KkmezH3-YkyK4MBkG873t"
+      ],
+      "polygon": [
+        [6.902, 122.079],
+        [6.902, 122.084],
+        [6.898, 122.084],
+        [6.898, 122.079]
       ]
     },
     {
