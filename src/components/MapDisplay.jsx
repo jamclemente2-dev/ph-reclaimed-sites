@@ -113,7 +113,7 @@ function MapDisplay({ sites, onPhotoClick }) {
             maxZoom={19}
           />
         </BaseLayer>
-        <Overlay name="Polygon Areas">
+        <Overlay checked name="Polygon Areas">
           <FeatureGroup>
             {sites
               .filter(site => Array.isArray(site.polygon) && site.polygon.length >= 3)
