@@ -171,7 +171,7 @@ function MapDisplay({ sites, onPhotoClick }) {
             maxZoom={19}
           />
         </BaseLayer>
-        <Overlay name="Polygon Areas">
+        <Overlay checked name="Polygon Areas">
           <FeatureGroup>
             {polygonsToRender.map(({ key, positions, site, color }) => (
               <Polygon
