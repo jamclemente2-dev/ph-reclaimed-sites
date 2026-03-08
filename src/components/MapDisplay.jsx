@@ -115,6 +115,7 @@ function convertPolygonCoordinates(geometry) {
 
 function MapDisplay({ sites, onPhotoClick, layers }) {
   const [ports, setPorts] = useState([]);
+  const [basemap, setBasemap] = useState('street'); // 'street' or 'satellite'
 
   // Get layer visibility from sidebar
   const showPolygons = layers?.find(l => l.id === 'polygons')?.visible ?? true;
@@ -187,11 +188,36 @@ function MapDisplay({ sites, onPhotoClick, layers }) {
       zoom={6}
       style={{ width: '100%', height: '100vh' }}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        maxZoom={19}
-      />
+      {/* Basemap Layers */}
+      {basemap === 'street' ? (
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={19}
+        />
+      ) : (
+        <TileLayer
+          attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          maxZoom={19}
+        />
+      )}
+
+      {/* Basemap Toggle Button */}
+      <div className="basemap-toggle">
+        <button
+          className={`basemap-btn ${basemap === 'street' ? 'active' : ''}`}
+          onClick={() => setBasemap('street')}
+        >
+          Street
+        </button>
+        <button
+          className={`basemap-btn ${basemap === 'satellite' ? 'active' : ''}`}
+          onClick={() => setBasemap('satellite')}
+        >
+          Satellite
+        </button>
+      </div>
       
       {/* Reclamation Polygons - controlled by sidebar */}
       {showPolygons && (
