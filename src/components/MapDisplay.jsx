@@ -219,7 +219,7 @@ function MapDisplay({ sites, onPhotoClick }) {
 
         {/* Ports Layer */}
         {ports.length > 0 && (
-          <Overlay checked name="Ports (OpenStreetMap)">
+          <Overlay name="Ports (OpenStreetMap)">
             <FeatureGroup>
               {ports.map((port, index) => (
                 <CircleMarker
