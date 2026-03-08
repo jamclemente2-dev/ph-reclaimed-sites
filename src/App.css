@@ -450,3 +450,57 @@ body {
   background: #d1d5db;
   border-radius: 2px;
 }
+
+/* ══════════════════════════════════════════════════════════════ */
+/* PORT STYLES - ADD TO END OF App.css                            */
+/* ══════════════════════════════════════════════════════════════ */
+
+/* ── Port Labels (Permanent Tooltips) ─────────────────────────── */
+
+.port-label {
+  background: rgba(220, 38, 38, 0.9) !important;
+  border: 2px solid white !important;
+  color: white !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  white-space: nowrap !important;
+}
+
+.port-label::before {
+  border-top-color: rgba(220, 38, 38, 0.9) !important;
+}
+
+/* ── Port Popup ───────────────────────────────────────────────── */
+
+.port-popup {
+  min-width: 150px;
+}
+
+.port-popup h4 {
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.port-note {
+  color: #6b7280;
+  font-size: 11px;
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Port Circle Markers (Override Leaflet defaults) ──────────── */
+
+.leaflet-interactive[stroke="#dc2626"] {
+  cursor: pointer;
+}
+
+.leaflet-interactive[stroke="#dc2626"]:hover {
+  fill-opacity: 1 !important;
+  stroke-width: 3 !important;
+}
