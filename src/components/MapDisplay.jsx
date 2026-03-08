@@ -120,7 +120,7 @@ function MapDisplay({ sites, onPhotoClick }) {
 
   // Load ports GeoJSON
   useEffect(() => {
-    const portsPath = `${import.meta.env.BASE_URL}ports.geojson`;
+    const portsPath = `${import.meta.env.BASE_URL}Ports.geojson`;
     console.log('🚢 Loading ports from:', portsPath);
     
     fetch(portsPath)
