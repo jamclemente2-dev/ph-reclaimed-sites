@@ -58,6 +58,7 @@ function processFeature(feature) {
         area: props.area || props.Has || '',
         pra_status: props.pra_status_2 || props.pra_status || '',
         notes: props.notes || '',
+        author: props.author || '',
         photos: photos
     };
 }
@@ -86,37 +87,36 @@ function createPopupContent(site) {
                 </div>
     `;
     
-    if (site.municipality) {
-        html += `<div class="detail-row"><span class="label">Location:</span> ${site.municipality}`;
-        if (site.province) html += `, ${site.province}`;
-        html += `</div>`;
+    if (site.year_start) {
+        html += `<div class="detail-row"><span class="label">Started:</span>${site.year_start}</div>`;
     }
     
-    if (site.barangay) {
-        html += `<div class="detail-row"><span class="label">Barangay:</span> ${site.barangay}</div>`;
+    if (site.year_end) {
+        html += `<div class="detail-row"><span class="label">Completed:</span>${site.year_end}</div>`;
     }
     
     if (site.developer) {
-        html += `<div class="detail-row"><span class="label">Developer:</span> ${site.developer}</div>`;
+        html += `<div class="detail-row"><span class="label">Developer:</span>${site.developer}</div>`;
     }
     
-    if (site.year_start || site.year_end) {
-        html += `<div class="detail-row"><span class="label">Year:</span> ${site.year_start || '?'} - ${site.year_end || 'Ongoing'}</div>`;
+    // Location as single line: Barangay, Municipality, Province
+    let locationParts = [];
+    if (site.barangay) locationParts.push(site.barangay);
+    if (site.municipality) locationParts.push(site.municipality);
+    if (site.province) locationParts.push(site.province);
+    if (locationParts.length > 0) {
+        html += `<div class="detail-row"><span class="label">Location:</span>${locationParts.join(', ')}</div>`;
     }
     
-    if (site.area) {
-        html += `<div class="detail-row"><span class="label">Area:</span> ${site.area} ha</div>`;
+    if (site.author) {
+        html += `<div class="detail-row"><span class="label">Data by:</span>${site.author}</div>`;
     }
     
     if (site.notes) {
-        const shortNotes = site.notes.length > 150 ? site.notes.substring(0, 150) + '...' : site.notes;
-        html += `<div class="detail-row"><span class="label">Notes:</span> ${shortNotes}</div>`;
+        html += `<div class="detail-row"><span class="label">Notes:</span>${site.notes}</div>`;
     }
     
     html += `
-                <div class="detail-row">
-                    <span class="label">Coordinates:</span> ${site.lat.toFixed(6)}, ${site.lon.toFixed(6)}
-                </div>
             </div>
     `;
     
