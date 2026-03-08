@@ -3,14 +3,14 @@ import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 
 function Lightbox({ photos, initialIndex = 0, onClose }) {
   const [index, setIndex] = useState(initialIndex);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(2);  // Start at 200% zoom!
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const imgRef = useRef(null);
 
   const resetZoom = useCallback(() => {
-    setScale(1);
+    setScale(2);  // Reset to 200% instead of 100%
     setPosition({ x: 0, y: 0 });
   }, []);
 
@@ -29,7 +29,7 @@ function Lightbox({ photos, initialIndex = 0, onClose }) {
   }, []);
 
   const zoomOut = useCallback(() => {
-    setScale(s => Math.max(s - 0.5, 1));
+    setScale(s => Math.max(s - 0.5, 1));  // Can zoom out to 100% (1x)
     if (scale <= 1.5) {
       setPosition({ x: 0, y: 0 });
     }
@@ -171,9 +171,9 @@ function Lightbox({ photos, initialIndex = 0, onClose }) {
       )}
 
       {/* Instructions */}
-      {scale === 1 && (
+      {scale === 2 && (
         <div className="lightbox-instructions">
-          Scroll or use +/- keys to zoom • Drag to pan when zoomed
+          Already at 200% zoom • Scroll or use +/- to adjust • Drag to pan
         </div>
       )}
     </div>
