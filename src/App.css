@@ -282,10 +282,16 @@ body {
 
 /* ── Lightbox ────────────────────────────────────────── */
 
+/* ══════════════════════════════════════════════════════════════ */
+/* BIGGER LIGHTBOX - REPLACE LIGHTBOX SECTION IN App.css         */
+/* ══════════════════════════════════════════════════════════════ */
+
+/* ── Lightbox ────────────────────────────────────────────────── */
+
 .lightbox-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.93);
+  background: rgba(0, 0, 0, 0.95);  /* Darker background */
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -351,8 +357,8 @@ body {
 }
 
 .lightbox-img {
-  max-width: 95vw;
-  max-height: 90vh;
+  max-width: 98vw;   /* Increased from 95vw - almost full width */
+  max-height: 96vh;  /* Increased from 90vh - almost full height */
   border-radius: 8px;
   object-fit: contain;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -369,6 +375,71 @@ body {
   padding: 5px 14px;
   border-radius: 20px;
   z-index: 10001;
+}
+
+/* Zoom controls */
+.lightbox-zoom-controls {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  padding: 8px 12px;
+  border-radius: 24px;
+  z-index: 10001;
+}
+
+.zoom-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.zoom-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.zoom-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.zoom-btn.reset-zoom {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+}
+
+.zoom-level {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 50px;
+  text-align: center;
+}
+
+.lightbox-instructions {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 16px;
+  border-radius: 16px;
+  z-index: 10001;
+  white-space: nowrap;
 }
 
 /* Zoom controls */
