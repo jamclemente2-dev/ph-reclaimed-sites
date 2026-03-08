@@ -1714,8 +1714,8 @@
     },
     {
       "name": "GN Power Mariveles Reclamation for Pier",
-      "lat": 14.524311,
-      "lon": 120.543153,
+      "lat": 14.42133280,
+      "lon": 120.54249330,
       "status": "Completed",
       "year started": "2017",
       "year completed": "2021",
@@ -2067,3 +2067,4 @@
     }
   ]
 }
+
