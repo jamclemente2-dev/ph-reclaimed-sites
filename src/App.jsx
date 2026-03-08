@@ -11,6 +11,11 @@ const INITIAL_FILTERS = {
   developer: '',
 };
 
+const INITIAL_LAYERS = [
+  { id: 'polygons', name: 'Reclamation Polygons', visible: true },
+  { id: 'ports', name: 'Ports (OpenStreetMap)', visible: false }
+];
+
 // Helper functions for processing GeoJSON
 function extractGoogleDriveId(url) {
   if (!url || url === 'null' || url.trim() === '') return null;
@@ -51,13 +56,13 @@ function processFeature(feature) {
     developer: props.developer || '',
     author: props.author || '',
     notes: props.notes || '',
-    comments: props.Comments || '',  // NEW: Comments field
+    comments: props.Comments || '',
     barangay: props.barangay || '',
     municipality: props['municipality/city'] || props.municipality || '',
     province: props.province || '',
     region: props.region || '',
-    area: props.Area || props.area || props.Has || '',  // FIXED: Capital 'Area' first
-    pra_status: props.pra_status || props.pra_status_2 || '',  // FIXED: pra_status (no _2)
+    area: props.Area || props.area || props.Has || '',
+    pra_status: props.pra_status || props.pra_status_2 || '',
     photos: photos,
     // Keep old field names for backwards compatibility
     'year started': props.year_start || '',
@@ -69,12 +74,12 @@ function processFeature(feature) {
 function App() {
   const [allSites, setAllSites] = useState([]);
   const [filters, setFilters] = useState(INITIAL_FILTERS);
+  const [layers, setLayers] = useState(INITIAL_LAYERS);
   const [lightbox, setLightbox] = useState({ open: false, photos: [], index: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Load GeoJSON from public folder
-    // Use Vite's BASE_URL to automatically handle the base path
     const geojsonPath = `${import.meta.env.BASE_URL}ReclamationSites.geojson`;
     console.log('🔍 Starting to fetch GeoJSON from:', geojsonPath);
     
@@ -90,13 +95,11 @@ function App() {
         console.log('✅ Loaded GeoJSON:', geojson.features.length, 'features');
         const sites = geojson.features.map(processFeature);
         console.log('✅ Processed sites:', sites.length);
-        console.log('✅ Sample site (Bataan):', sites.find(s => s.code_name === 'BTN-PIL-001'));
         setAllSites(sites);
         setLoading(false);
       })
       .catch(error => {
         console.error('❌ Error loading GeoJSON:', error);
-        console.error('❌ Error details:', error.message);
         setLoading(false);
         alert(`Failed to load map data: ${error.message}\n\nPlease check:\n1. Is ReclamationSites.geojson in the public/ folder?\n2. Did GitHub Pages finish deploying?\n3. Try hard refresh (Ctrl+Shift+R)`);
       });
@@ -124,6 +127,12 @@ function App() {
     setFilters(INITIAL_FILTERS);
   }, []);
 
+  const handleLayerToggle = useCallback((layerId) => {
+    setLayers(prev => prev.map(layer => 
+      layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
+    ));
+  }, []);
+
   const openLightbox = useCallback((photos, index) => {
     setLightbox({ open: true, photos, index });
   }, []);
@@ -133,7 +142,18 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div style={{ padding: '20px' }}>Loading reclamation sites...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        height: '100vh',
+        fontSize: '18px',
+        color: '#6b7280'
+      }}>
+        Loading reclamation sites...
+      </div>
+    );
   }
 
   return (
@@ -144,11 +164,14 @@ function App() {
         onClearFilters={handleClearFilters}
         totalSites={allSites.length}
         visibleSites={filteredSites.length}
+        layers={layers}
+        onLayerToggle={handleLayerToggle}
       />
       <div className="map-wrapper">
         <MapDisplay
           sites={filteredSites}
           onPhotoClick={openLightbox}
+          layers={layers}
         />
       </div>
       {lightbox.open && (
