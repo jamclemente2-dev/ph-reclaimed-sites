@@ -126,7 +126,7 @@ function MapDisplay({ sites, onPhotoClick }) {
     fetch(portsPath)
       .then(response => {
         if (!response.ok) {
-          console.log('⚠️ No ports.geojson found (this is okay)');
+          console.log('⚠️ No Ports.geojson found (this is okay)');
           return null;
         }
         return response.json();
@@ -233,7 +233,7 @@ function MapDisplay({ sites, onPhotoClick }) {
                     weight: 2
                   }}
                 >
-                  <Tooltip permanent direction="top" offset={[0, -10]} className="port-label">
+                  <Tooltip direction="top" offset={[0, -10]}>
                     {port.name}
                   </Tooltip>
                   <Popup>
