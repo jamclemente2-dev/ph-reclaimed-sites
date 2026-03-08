@@ -61,11 +61,15 @@ function SitePopup({ site, onPhotoClick }) {
     <div className="popup-content">
       <h3>{site.name || 'Unnamed Site'}</h3>
 
+      <InfoRow label="Code"      value={site.code_name} />
       <InfoRow label="Status"    value={site.status} />
-      <InfoRow label="Started"   value={site['year started']} />
-      <InfoRow label="Completed" value={site['year completed']} />
+      <InfoRow label="Started"   value={site.year_start || site['year started']} />
+      <InfoRow label="Completed" value={site.year_end || site['year completed']} />
       <InfoRow label="Developer" value={site.developer} />
-      <InfoRow label="Location"  value={site.address} />
+      <InfoRow label="Location"  value={site.address || [site.barangay, site.municipality, site.province].filter(Boolean).join(', ')} />
+      <InfoRow label="Region"    value={site.region} />
+      <InfoRow label="Area"      value={site.area ? `${site.area} ha` : null} />
+      <InfoRow label="PRA Status" value={site.pra_status} />
       <InfoRow label="Data by"   value={site.author} />
       <InfoRow label="Notes"     value={site.notes} />
 
