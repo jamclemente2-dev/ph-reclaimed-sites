@@ -150,6 +150,58 @@ body {
   background: #fee2e2;
 }
 
+/* ── Layer Controls ──────────────────────────────────── */
+
+.layer-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.layer-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.layer-checkbox:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.layer-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #1e40af;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.layer-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  flex: 1;
+}
+
+.layer-checkbox:has(input:checked) {
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+.layer-checkbox:has(input:checked) .layer-name {
+  color: #1e40af;
+  font-weight: 600;
+}
+
 /* ── Legend ──────────────────────────────────────────── */
 
 .legend {
@@ -447,6 +499,43 @@ body {
 .sidebar::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 2px;
+}
+
+/* ── Basemap Toggle ──────────────────────────────────── */
+
+.basemap-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  gap: 4px;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 4px;
+}
+
+.basemap-btn {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.basemap-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.basemap-btn.active {
+  background: #1e40af;
+  color: white;
 }
 
 /* ══════════════════════════════════════════════════════════════ */
