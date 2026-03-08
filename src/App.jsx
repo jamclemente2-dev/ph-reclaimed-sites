@@ -73,18 +73,35 @@ function App() {
 
   useEffect(() => {
     // Load GeoJSON from public folder
+    console.log('🔍 Starting to fetch GeoJSON...');
     fetch('/ReclamationSites.geojson')
-      .then(response => response.json())
+      .then(response => {
+        console.log('📡 Fetch response:', response.status, response.statusText);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(geojson => {
         console.log('✅ Loaded GeoJSON:', geojson.features.length, 'features');
         const sites = geojson.features.map(processFeature);
-        console.log('✅ Processed first site:', sites[0]);
+        console.log('✅ Processed sites:', sites.length);
+        console.log('✅ First site:', sites[0]);
+        console.log('✅ Sample site with all fields:', {
+          name: sites[0].name,
+          code_name: sites[0].code_name,
+          region: sites[0].region,
+          area: sites[0].area,
+          pra_status: sites[0].pra_status
+        });
         setAllSites(sites);
         setLoading(false);
       })
       .catch(error => {
         console.error('❌ Error loading GeoJSON:', error);
+        console.error('❌ Error details:', error.message);
         setLoading(false);
+        alert(`Failed to load map data: ${error.message}\n\nPlease check:\n1. Is ReclamationSites.geojson in the root folder?\n2. Did GitHub Pages finish deploying?\n3. Try hard refresh (Ctrl+Shift+R)`);
       });
   }, []);
 
