@@ -57,38 +57,59 @@ function SitePopup({ site, onPhotoClick }) {
   const photos = site.photos || [];
 
   return (
-    <div className="popup-content">
-      <h3>{site.name || 'Unnamed Site'}</h3>
-
-      <InfoRow label="Code"      value={site.code_name} />
-      <InfoRow label="Status"    value={site.status} />
-      <InfoRow label="Started"   value={site.year_start || site['year started']} />
-      <InfoRow label="Completed" value={site.year_end || site['year completed']} />
-      <InfoRow label="Developer" value={site.developer} />
-      <InfoRow label="Location"  value={site.address || [site.barangay, site.municipality, site.province].filter(Boolean).join(', ')} />
-      <InfoRow label="Region"    value={site.region} />
-      <InfoRow label="Area"      value={site.area ? `${site.area} ha` : null} />
-      <InfoRow label="PRA Status" value={site.pra_status} />
-      <InfoRow label="Data by"   value={site.author} />
-      <InfoRow label="Notes"     value={site.notes} />
-
+    <div className="popup-landscape">
+      {/* Left Side: Photos */}
       {photos.length > 0 && (
-        <div className="photo-gallery">
-          <h4>Photos ({photos.length})</h4>
-          <div className="photo-thumbnails">
-            {photos.map((photo, i) => (
-              <img
-                key={i}
-                src={photo}
-                alt={`Photo ${i + 1}`}
-                className="photo-thumbnail"
+        <div className="popup-photos">
+          <div className="photo-grid">
+            {photos.slice(0, 4).map((photo, i) => (
+              <div 
+                key={i} 
+                className="photo-item"
                 onClick={() => onPhotoClick(photos, i)}
-                onError={e => { e.currentTarget.style.display = 'none'; }}
-              />
+              >
+                <img
+                  src={photo}
+                  alt={`Photo ${i + 1}`}
+                  onError={e => { 
+                    e.currentTarget.parentElement.style.display = 'none'; 
+                  }}
+                />
+                <div className="photo-overlay">
+                  <span className="zoom-icon">🔍</span>
+                </div>
+              </div>
             ))}
           </div>
+          {photos.length > 4 && (
+            <div className="photo-count">+{photos.length - 4} more photos</div>
+          )}
         </div>
       )}
+
+      {/* Right Side: Info */}
+      <div className="popup-info">
+        <h3>{site.name || 'Unnamed Site'}</h3>
+
+        <div className="info-grid">
+          <InfoRow label="Code"      value={site.code_name} />
+          <InfoRow label="Status"    value={site.status} />
+          <InfoRow label="Started"   value={site.year_start || site['year started']} />
+          <InfoRow label="Completed" value={site.year_end || site['year completed']} />
+          <InfoRow label="Developer" value={site.developer} />
+          <InfoRow label="Location"  value={site.address || [site.barangay, site.municipality, site.province].filter(Boolean).join(', ')} />
+          <InfoRow label="Region"    value={site.region} />
+          <InfoRow label="Area"      value={site.area ? `${site.area} ha` : null} />
+          <InfoRow label="PRA Status" value={site.pra_status} />
+          <InfoRow label="Data by"   value={site.author} />
+          {site.notes && (
+            <div className="info-notes">
+              <span className="label">Notes:</span>
+              <p className="notes-text">{site.notes}</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -169,7 +190,7 @@ function MapDisplay({ sites, onPhotoClick }) {
                 positions={positions}
                 pathOptions={{ color, fillColor: color, fillOpacity: 0.25, weight: 2 }}
               >
-                <Popup maxWidth={300} minWidth={240}>
+                <Popup maxWidth={900} minWidth={700}>
                   <SitePopup site={site} onPhotoClick={onPhotoClick} />
                 </Popup>
               </Polygon>
@@ -190,7 +211,7 @@ function MapDisplay({ sites, onPhotoClick }) {
             position={[site.lat, site.lon]}
             icon={createMarkerIcon(site.status)}
           >
-            <Popup maxWidth={300} minWidth={240}>
+            <Popup maxWidth={900} minWidth={700}>
               <SitePopup site={site} onPhotoClick={onPhotoClick} />
             </Popup>
           </Marker>
