@@ -133,8 +133,6 @@ function MapDisplay({ sites, onPhotoClick }) {
               color,
             });
           });
-        } else {
-          console.warn('Skipping polygon with projected coordinates:', site.name);
         }
       }
     });
