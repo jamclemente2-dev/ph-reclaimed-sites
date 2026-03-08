@@ -51,12 +51,13 @@ function processFeature(feature) {
     developer: props.developer || '',
     author: props.author || '',
     notes: props.notes || '',
+    comments: props.Comments || '',  // NEW: Comments field
     barangay: props.barangay || '',
     municipality: props['municipality/city'] || props.municipality || '',
     province: props.province || '',
     region: props.region || '',
-    area: props.area || props.Has || '',
-    pra_status: props.pra_status_2 || props.pra_status || '',
+    area: props.Area || props.area || props.Has || '',  // FIXED: Capital 'Area' first
+    pra_status: props.pra_status || props.pra_status_2 || '',  // FIXED: pra_status (no _2)
     photos: photos,
     // Keep old field names for backwards compatibility
     'year started': props.year_start || '',
@@ -89,14 +90,7 @@ function App() {
         console.log('✅ Loaded GeoJSON:', geojson.features.length, 'features');
         const sites = geojson.features.map(processFeature);
         console.log('✅ Processed sites:', sites.length);
-        console.log('✅ First site:', sites[0]);
-        console.log('✅ Sample site with all fields:', {
-          name: sites[0].name,
-          code_name: sites[0].code_name,
-          region: sites[0].region,
-          area: sites[0].area,
-          pra_status: sites[0].pra_status
-        });
+        console.log('✅ Sample site (Bataan):', sites.find(s => s.code_name === 'BTN-PIL-001'));
         setAllSites(sites);
         setLoading(false);
       })
