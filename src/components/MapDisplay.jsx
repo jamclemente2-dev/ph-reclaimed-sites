@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup, CircleMarker, Tooltip } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polygon, FeatureGroup, CircleMarker, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
-
-const { BaseLayer, Overlay } = LayersControl;
 
 // ── Marker icon helpers ───────────────────────────────────────────────────────
 
@@ -115,8 +113,12 @@ function convertPolygonCoordinates(geometry) {
 
 // ── Map component ─────────────────────────────────────────────────────────────
 
-function MapDisplay({ sites, onPhotoClick }) {
+function MapDisplay({ sites, onPhotoClick, layers }) {
   const [ports, setPorts] = useState([]);
+
+  // Get layer visibility from sidebar
+  const showPolygons = layers?.find(l => l.id === 'polygons')?.visible ?? true;
+  const showPorts = layers?.find(l => l.id === 'ports')?.visible ?? false;
 
   // Load ports GeoJSON
   useEffect(() => {
@@ -185,71 +187,59 @@ function MapDisplay({ sites, onPhotoClick }) {
       zoom={6}
       style={{ width: '100%', height: '100vh' }}
     >
-      <LayersControl position="topright">
-        <BaseLayer checked name="Street">
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            maxZoom={19}
-          />
-        </BaseLayer>
-        <BaseLayer name="Satellite">
-          <TileLayer
-            attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            maxZoom={19}
-          />
-        </BaseLayer>
-        
-        <Overlay checked name="Reclamation Polygons">
-          <FeatureGroup>
-            {polygonsToRender.map(({ key, positions, site, color }) => (
-              <Polygon
-                key={key}
-                positions={positions}
-                pathOptions={{ color, fillColor: color, fillOpacity: 0.25, weight: 2 }}
-              >
-                <Popup maxWidth={300} minWidth={240}>
-                  <SitePopup site={site} onPhotoClick={onPhotoClick} />
-                </Popup>
-              </Polygon>
-            ))}
-          </FeatureGroup>
-        </Overlay>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
+      />
+      
+      {/* Reclamation Polygons - controlled by sidebar */}
+      {showPolygons && (
+        <FeatureGroup>
+          {polygonsToRender.map(({ key, positions, site, color }) => (
+            <Polygon
+              key={key}
+              positions={positions}
+              pathOptions={{ color, fillColor: color, fillOpacity: 0.25, weight: 2 }}
+            >
+              <Popup maxWidth={300} minWidth={240}>
+                <SitePopup site={site} onPhotoClick={onPhotoClick} />
+              </Popup>
+            </Polygon>
+          ))}
+        </FeatureGroup>
+      )}
 
-        {/* Ports Layer */}
-        {ports.length > 0 && (
-          <Overlay name="Ports (OpenStreetMap)">
-            <FeatureGroup>
-              {ports.map((port, index) => (
-                <CircleMarker
-                  key={`port-${index}`}
-                  center={[port.lat, port.lon]}
-                  radius={6}
-                  pathOptions={{
-                    color: '#dc2626',
-                    fillColor: '#ef4444',
-                    fillOpacity: 0.8,
-                    weight: 2
-                  }}
-                >
-                  <Tooltip direction="top" offset={[0, -10]}>
-                    {port.name}
-                  </Tooltip>
-                  <Popup>
-                    <div className="port-popup">
-                      <h4>{port.name}</h4>
-                      <p className="port-note">
-                        <em>Port data extracted from OpenStreetMap</em>
-                      </p>
-                    </div>
-                  </Popup>
-                </CircleMarker>
-              ))}
-            </FeatureGroup>
-          </Overlay>
-        )}
-      </LayersControl>
+      {/* Ports Layer - controlled by sidebar */}
+      {showPorts && ports.length > 0 && (
+        <FeatureGroup>
+          {ports.map((port, index) => (
+            <CircleMarker
+              key={`port-${index}`}
+              center={[port.lat, port.lon]}
+              radius={6}
+              pathOptions={{
+                color: '#dc2626',
+                fillColor: '#ef4444',
+                fillOpacity: 0.8,
+                weight: 2
+              }}
+            >
+              <Tooltip direction="top" offset={[0, -10]}>
+                {port.name}
+              </Tooltip>
+              <Popup>
+                <div className="port-popup">
+                  <h4>{port.name}</h4>
+                  <p className="port-note">
+                    <em>Port data extracted from OpenStreetMap</em>
+                  </p>
+                </div>
+              </Popup>
+            </CircleMarker>
+          ))}
+        </FeatureGroup>
+      )}
 
       {/* Reclamation Sites Markers */}
       {sites.map((site, index) => {
