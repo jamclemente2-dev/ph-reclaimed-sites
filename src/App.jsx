@@ -73,8 +73,11 @@ function App() {
 
   useEffect(() => {
     // Load GeoJSON from public folder
-    console.log('🔍 Starting to fetch GeoJSON...');
-    fetch('/ph-reclaimed-sites/ReclamationSites.geojson')  // ← FIXED: Added base path
+    // Use Vite's BASE_URL to automatically handle the base path
+    const geojsonPath = `${import.meta.env.BASE_URL}ReclamationSites.geojson`;
+    console.log('🔍 Starting to fetch GeoJSON from:', geojsonPath);
+    
+    fetch(geojsonPath)
       .then(response => {
         console.log('📡 Fetch response:', response.status, response.statusText);
         if (!response.ok) {
