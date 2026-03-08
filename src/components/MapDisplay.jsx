@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup } from 'react-leaflet';
+import { useState, useEffect, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup, CircleMarker, Tooltip } from 'react-leaflet';
 import L from 'leaflet';
 
 const { BaseLayer, Overlay } = LayersControl;
@@ -116,6 +116,45 @@ function convertPolygonCoordinates(geometry) {
 // ── Map component ─────────────────────────────────────────────────────────────
 
 function MapDisplay({ sites, onPhotoClick }) {
+  const [ports, setPorts] = useState([]);
+
+  // Load ports GeoJSON
+  useEffect(() => {
+    const portsPath = `${import.meta.env.BASE_URL}ports.geojson`;
+    console.log('🚢 Loading ports from:', portsPath);
+    
+    fetch(portsPath)
+      .then(response => {
+        if (!response.ok) {
+          console.log('⚠️ No ports.geojson found (this is okay)');
+          return null;
+        }
+        return response.json();
+      })
+      .then(geojson => {
+        if (geojson && geojson.features) {
+          console.log('✅ Loaded ports:', geojson.features.length);
+          
+          // Process ports features
+          const processedPorts = geojson.features.map(feature => {
+            const props = feature.properties;
+            const coords = feature.geometry.coordinates;
+            
+            return {
+              name: props.name || props.Name || 'Unnamed Port',
+              lat: coords[1],
+              lon: coords[0],
+              type: props.type || 'port'
+            };
+          });
+          
+          setPorts(processedPorts);
+        }
+      })
+      .catch(error => {
+        console.log('⚠️ Ports not loaded:', error.message);
+      });
+  }, []);
 
   // Extract polygons from sites
   const polygonsToRender = useMemo(() => {
@@ -161,7 +200,8 @@ function MapDisplay({ sites, onPhotoClick }) {
             maxZoom={19}
           />
         </BaseLayer>
-        <Overlay checked name="Polygon Areas">
+        
+        <Overlay checked name="Reclamation Polygons">
           <FeatureGroup>
             {polygonsToRender.map(({ key, positions, site, color }) => (
               <Polygon
@@ -176,8 +216,42 @@ function MapDisplay({ sites, onPhotoClick }) {
             ))}
           </FeatureGroup>
         </Overlay>
+
+        {/* Ports Layer */}
+        {ports.length > 0 && (
+          <Overlay checked name="Ports (OpenStreetMap)">
+            <FeatureGroup>
+              {ports.map((port, index) => (
+                <CircleMarker
+                  key={`port-${index}`}
+                  center={[port.lat, port.lon]}
+                  radius={6}
+                  pathOptions={{
+                    color: '#dc2626',
+                    fillColor: '#ef4444',
+                    fillOpacity: 0.8,
+                    weight: 2
+                  }}
+                >
+                  <Tooltip permanent direction="top" offset={[0, -10]} className="port-label">
+                    {port.name}
+                  </Tooltip>
+                  <Popup>
+                    <div className="port-popup">
+                      <h4>{port.name}</h4>
+                      <p className="port-note">
+                        <em>Port data extracted from OpenStreetMap</em>
+                      </p>
+                    </div>
+                  </Popup>
+                </CircleMarker>
+              ))}
+            </FeatureGroup>
+          </Overlay>
+        )}
       </LayersControl>
 
+      {/* Reclamation Sites Markers */}
       {sites.map((site, index) => {
         // Skip sites without valid coordinates
         if (!site.lat || !site.lon || isNaN(site.lat) || isNaN(site.lon)) {
