@@ -173,17 +173,25 @@ function MapDisplay({ sites, onPhotoClick }) {
         </Overlay>
       </LayersControl>
 
-      {sites.map((site, index) => (
-        <Marker
-          key={`${site.name}-${index}`}
-          position={[site.lat, site.lon]}
-          icon={createMarkerIcon(site.status)}
-        >
-          <Popup maxWidth={300} minWidth={240}>
-            <SitePopup site={site} onPhotoClick={onPhotoClick} />
-          </Popup>
-        </Marker>
-      ))}
+      {sites.map((site, index) => {
+        // Skip sites without valid coordinates
+        if (!site.lat || !site.lon || isNaN(site.lat) || isNaN(site.lon)) {
+          console.warn('Skipping site with invalid coordinates:', site.name, site.lat, site.lon);
+          return null;
+        }
+        
+        return (
+          <Marker
+            key={`${site.name}-${index}`}
+            position={[site.lat, site.lon]}
+            icon={createMarkerIcon(site.status)}
+          >
+            <Popup maxWidth={300} minWidth={240}>
+              <SitePopup site={site} onPhotoClick={onPhotoClick} />
+            </Popup>
+          </Marker>
+        );
+      })}
     </MapContainer>
   );
 }
