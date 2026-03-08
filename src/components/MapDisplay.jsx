@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, LayersControl, Polygon, FeatureGroup } from 'react-leaflet';
 import L from 'leaflet';
-import reclamationGeoJson from '../data/ReclamationPolygons.json';
 
 const { BaseLayer, Overlay } = LayersControl;
 
@@ -94,46 +93,54 @@ function SitePopup({ site, onPhotoClick }) {
   );
 }
 
+// Helper to convert polygon coordinates
+function convertPolygonCoordinates(geometry) {
+  // Check if coordinates are in lat/lon range (< 180)
+  if (geometry.type === 'Polygon') {
+    const firstCoord = geometry.coordinates[0][0];
+    if (Math.abs(firstCoord[0]) < 180 && Math.abs(firstCoord[1]) < 90) {
+      // GeoJSON is [lon, lat], Leaflet needs [lat, lon]
+      return [geometry.coordinates[0].map(([lon, lat]) => [lat, lon])];
+    }
+  } else if (geometry.type === 'MultiPolygon') {
+    const firstCoord = geometry.coordinates[0][0][0];
+    if (Math.abs(firstCoord[0]) < 180 && Math.abs(firstCoord[1]) < 90) {
+      return geometry.coordinates.map(poly => poly[0].map(([lon, lat]) => [lat, lon]));
+    }
+  }
+  
+  // Coordinates are in projected CRS - skip
+  return null;
+}
+
 // ── Map component ─────────────────────────────────────────────────────────────
 
 function MapDisplay({ sites, onPhotoClick }) {
 
-  // Build name → site lookup for matching GeoJSON features to site records
-  const sitesByName = useMemo(() => {
-    const map = {};
-    sites.forEach(s => { if (s.name) map[s.name] = s; });
-    return map;
-  }, [sites]);
-
-  // Convert GeoJSON features to flat list of { positions, site } for rendering.
-  // GeoJSON coordinates are [lon, lat]; Leaflet expects [lat, lon].
-  const geoJsonPolygons = useMemo(() => {
-    if (!reclamationGeoJson?.features) return null;
+  // Extract polygons from sites
+  const polygonsToRender = useMemo(() => {
     const result = [];
-    reclamationGeoJson.features.forEach((feature, fi) => {
-      const geom = feature.geometry;
-      const props = feature.properties || {};
-      const site = sitesByName[props.name] || props;
-      const color = getStatusColor(site.status);
-
-      const rings =
-        geom?.type === 'Polygon'      ? [geom.coordinates[0]] :
-        geom?.type === 'MultiPolygon' ? geom.coordinates.map(poly => poly[0]) :
-        [];
-
-      rings.forEach((ring, ri) => {
-        result.push({
-          key: `geojson-${fi}-${ri}`,
-          positions: ring.map(([lon, lat]) => [lat, lon]),
-          site,
-          color,
-        });
-      });
+    sites.forEach((site, index) => {
+      if (site.geometry && (site.geometry.type === 'Polygon' || site.geometry.type === 'MultiPolygon')) {
+        const coords = convertPolygonCoordinates(site.geometry);
+        if (coords) {
+          const color = getStatusColor(site.status);
+          coords.forEach((ring, ri) => {
+            result.push({
+              key: `polygon-${index}-${ri}`,
+              positions: ring,
+              site,
+              color,
+            });
+          });
+        } else {
+          console.warn('Skipping polygon with projected coordinates:', site.name);
+        }
+      }
     });
+    console.log(`📐 Rendering ${result.length} polygons from ${sites.length} sites`);
     return result;
-  }, [sitesByName]);
-
-  const polygonsToRender = geoJsonPolygons ?? [];
+  }, [sites]);
 
   return (
     <MapContainer
@@ -176,7 +183,6 @@ function MapDisplay({ sites, onPhotoClick }) {
       {sites.map((site, index) => {
         // Skip sites without valid coordinates
         if (!site.lat || !site.lon || isNaN(site.lat) || isNaN(site.lon)) {
-          console.warn('Skipping site with invalid coordinates:', site.name, site.lat, site.lon);
           return null;
         }
         
