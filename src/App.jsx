@@ -74,7 +74,7 @@ function App() {
   useEffect(() => {
     // Load GeoJSON from public folder
     console.log('🔍 Starting to fetch GeoJSON...');
-    fetch('/ReclamationSites.geojson')
+    fetch('/ph-reclaimed-sites/ReclamationSites.geojson')  // ← FIXED: Added base path
       .then(response => {
         console.log('📡 Fetch response:', response.status, response.statusText);
         if (!response.ok) {
@@ -101,7 +101,7 @@ function App() {
         console.error('❌ Error loading GeoJSON:', error);
         console.error('❌ Error details:', error.message);
         setLoading(false);
-        alert(`Failed to load map data: ${error.message}\n\nPlease check:\n1. Is ReclamationSites.geojson in the root folder?\n2. Did GitHub Pages finish deploying?\n3. Try hard refresh (Ctrl+Shift+R)`);
+        alert(`Failed to load map data: ${error.message}\n\nPlease check:\n1. Is ReclamationSites.geojson in the public/ folder?\n2. Did GitHub Pages finish deploying?\n3. Try hard refresh (Ctrl+Shift+R)`);
       });
   }, []);
 
