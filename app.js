@@ -11,7 +11,7 @@ const INITIAL_FILTERS = {
   developer: '',
 };
 
-// Helper functions
+// Helper functions for processing GeoJSON
 function extractGoogleDriveId(url) {
   if (!url || url === 'null' || url.trim() === '') return null;
   const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -57,7 +57,11 @@ function processFeature(feature) {
     region: props.region || '',
     area: props.area || props.Has || '',
     pra_status: props.pra_status_2 || props.pra_status || '',
-    photos: photos
+    photos: photos,
+    // Keep old field names for backwards compatibility
+    'year started': props.year_start || '',
+    'year completed': props.year_end || '',
+    address: [props.barangay, props['municipality/city'] || props.municipality, props.province].filter(Boolean).join(', ')
   };
 }
 
@@ -66,24 +70,20 @@ function App() {
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [lightbox, setLightbox] = useState({ open: false, photos: [], index: 0 });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Load GeoJSON file
-    fetch('/Reclamation_Sites_PolygonandPoints.geojson')
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to load GeoJSON');
-        return response.json();
-      })
+    // Load GeoJSON from public folder
+    fetch('/ReclamationSites.geojson')
+      .then(response => response.json())
       .then(geojson => {
-        console.log('Loaded GeoJSON:', geojson.features.length, 'features');
+        console.log('✅ Loaded GeoJSON:', geojson.features.length, 'features');
         const sites = geojson.features.map(processFeature);
+        console.log('✅ Processed first site:', sites[0]);
         setAllSites(sites);
         setLoading(false);
       })
-      .catch(err => {
-        console.error('Error loading GeoJSON:', err);
-        setError(err.message);
+      .catch(error => {
+        console.error('❌ Error loading GeoJSON:', error);
         setLoading(false);
       });
   }, []);
@@ -92,6 +92,7 @@ function App() {
     const match = (field, key) =>
       !filters[key] ||
       (site[field] || '').toLowerCase().includes(filters[key].toLowerCase());
+
     return (
       match('name', 'name') &&
       match('municipality', 'municipality') &&
@@ -118,33 +119,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '18px',
-        color: '#0066cc'
-      }}>
-        Loading reclamation sites...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '18px',
-        color: '#cc0000'
-      }}>
-        Error: {error}
-      </div>
-    );
+    return <div style={{ padding: '20px' }}>Loading reclamation sites...</div>;
   }
 
   return (
