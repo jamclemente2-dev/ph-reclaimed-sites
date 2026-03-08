@@ -218,11 +218,11 @@ body {
   font-size: 12px;
 }
 
-/* ── Large popup (50% screen width) ──────────────────── */
+/* ── Large popup (35% screen width) ──────────────────── */
 
 .leaflet-popup {
-  max-width: 50vw !important;
-  min-width: 400px !important;
+  max-width: 35vw !important;
+  min-width: 320px !important;
 }
 
 .leaflet-popup-content-wrapper {
@@ -232,7 +232,7 @@ body {
 
 .leaflet-popup-content {
   margin: 16px 20px;
-  max-height: 70vh !important;
+  max-height: 65vh !important;
   overflow-y: auto !important;
   width: auto !important;
 }
@@ -260,7 +260,7 @@ body {
 
 .photo-thumbnail {
   width: 100%;
-  height: 120px;  /* Increased from 78px */
+  height: 100px;  /* Reduced from 120px for better fit */
   object-fit: cover;
   border-radius: 4px;
   cursor: pointer;
