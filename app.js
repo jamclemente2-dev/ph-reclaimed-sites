@@ -43,6 +43,7 @@ function processFeature(feature) {
     
     return {
         name: props.Name || props.name_2 || 'Unnamed Site',
+        code_name: props['Code name'] || '',
         lat: props.lat,
         lon: props.lon,
         geometry: feature.geometry,
@@ -81,6 +82,13 @@ function createPopupContent(site) {
         <div class="popup-content">
             <h3>${site.name}</h3>
             <div class="popup-details">
+    `;
+    
+    if (site.code_name) {
+        html += `<div class="detail-row"><span class="label">Code:</span>${site.code_name}</div>`;
+    }
+    
+    html += `
                 <div class="detail-row">
                     <span class="label">Status:</span>
                     <span class="status-badge status-${site.status.toLowerCase().replace(/\s+/g, '-')}">${site.status}</span>
@@ -106,6 +114,18 @@ function createPopupContent(site) {
     if (site.province) locationParts.push(site.province);
     if (locationParts.length > 0) {
         html += `<div class="detail-row"><span class="label">Location:</span>${locationParts.join(', ')}</div>`;
+    }
+    
+    if (site.region) {
+        html += `<div class="detail-row"><span class="label">Region:</span>${site.region}</div>`;
+    }
+    
+    if (site.area) {
+        html += `<div class="detail-row"><span class="label">Area:</span>${site.area} ha</div>`;
+    }
+    
+    if (site.pra_status) {
+        html += `<div class="detail-row"><span class="label">PRA Status:</span>${site.pra_status}</div>`;
     }
     
     if (site.author) {
